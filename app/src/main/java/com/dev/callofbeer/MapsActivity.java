@@ -14,9 +14,11 @@ import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -40,7 +42,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
     private String provider;
     private Criteria criteria;
     private Marker markerMe = null;
-    private Marker[] marker = new Marker[21];
+    private ArrayList<Marker> marker = new ArrayList<Marker>();
     private int compteurMarker = 0;
     private CameraUpdate update;
 
@@ -81,7 +83,10 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                             mMap.setOnCameraChangeListener(this);
                             LatLng pos = takePosition();
                             update = CameraUpdateFactory.newLatLngZoom(pos,11);
-                            markerMe = mMap.addMarker(new MarkerOptions().position(pos).title("You"));
+                            markerMe = mMap.addMarker(new MarkerOptions()
+                                    .position(pos)
+                                    .title("You")
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icone_me)));
                             mMap.animateCamera(update);
                         }
                         setUpMap();
@@ -95,16 +100,35 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                                 /* take Event */
     /*--------------------------------------------------------------------------*/
     private void setUpMap() {
-        ArrayList<LatLng> tab = API.getEvents(takeMarker());
-        ////////////////////////////////////////////////////////////////////////////////
+        ArrayList<EventBeer> tab = API.getEvents(takeMarker());
 
         for(int j = 0 ; j < tab.size() ; j++){
-            marker[compteurMarker] = mMap.addMarker(new MarkerOptions()
-                    .position(tab.get(j))
-                    .title("Me too !")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-            compteurMarker++;
+            Double lat = tab.get(j).getLat();
+            Double lon = tab.get(j).getLongi();
+            LatLng pos = new LatLng(lat,lon);
+            String name = tab.get(j).getNomEvent();
+            Log.e("LATLON",lat.toString());
+            mMap.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title(name)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
         }
+
+        /*
+        *
+        * for(int j = 0 ; j < tab.size() ; j++){
+            //Array List si au dessus de 21 alors Crash
+            Double lat = tab.get(j).getLat();
+            Double lon = tab.get(j).getLongi();
+            LatLng pos = new LatLng(lat,lon);
+            String name = tab.get(j).getNomEvent();
+
+            mMap.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title(name)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
+        }
+        * */
     }
 
     private ArrayList<LatLng> takeMarker(){
@@ -124,30 +148,27 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
 
+        final View myView = inflater.inflate(R.layout.add_event, null);
+        builder.setView(myView);
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.add_event, null))
-                // Add action buttons
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
 
-                        Calendar calendar = Calendar.getInstance();
-                        java.util.Date now = calendar.getTime();
-                        java.sql.Timestamp time = new java.sql.Timestamp(now.getTime());
-                        //EditText editText = (EditText) findViewById(R.id.nomevent);
-                        //PROBLEME
-                        //String message = editText.getText().toString();
-                        String message = "ojcqs";
+        // Add action buttons
+        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Calendar calendar = Calendar.getInstance();
+                java.util.Date now = calendar.getTime();
+                java.sql.Timestamp time = new java.sql.Timestamp(now.getTime());
 
-                        EventBeer event = new EventBeer(message,time, position.latitude,position.longitude);
-                        Log.e("NOM", message);
-                        //récup de la longitude et latitude
-                        API.sendEvent(event);
-                        //création de l'event
-                        //appelle de la fonction de l'api pour set un event avec l'event en param
-                    }
-                })
+
+                EditText editText = (EditText) myView.findViewById(R.id.nomevent);
+                String message = editText.getText().toString();
+
+                EventBeer event = new EventBeer(message,time, position.latitude,position.longitude);
+                API.sendEvent(event);
+            }
+        })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();

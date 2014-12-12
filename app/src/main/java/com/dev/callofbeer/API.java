@@ -29,6 +29,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -69,11 +70,11 @@ public class API {
         return InputStreamToString(in, 1024);
     }
 
-    public static ArrayList<LatLng> getEvents(ArrayList<LatLng> screen) {
+    public static ArrayList<EventBeer> getEvents(ArrayList<LatLng> screen) {
         try {
             String myurl= "http://api.callofbeer.com/events?topLat="+screen.get(0).latitude+"&topLon="+screen.get(0).longitude+"&botLat="+screen.get(1).latitude+"&botLon="+screen.get(1).longitude+"";
             Log.e("URL", myurl);
-            ArrayList<LatLng> tabValue = new ArrayList<LatLng>();
+            ArrayList<EventBeer> tabValue = new ArrayList<EventBeer>();
             URL url = new URL(myurl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
@@ -89,17 +90,17 @@ public class API {
                     JSONObject address = new JSONObject(obj.get("address").toString());
                     JSONArray geo = new JSONArray(address.get("geolocation").toString());
 
-                    Double ok = geo.getDouble(0);
-                    Double ok1 = geo.getDouble(1);
+                    Double lat = geo.getDouble(1);
+                    Double lon = geo.getDouble(0);
 
-                    tabValue.add(new LatLng(ok1, ok));
+                    Timestamp time = new java.sql.Timestamp(100000000); // Not a good time
+
+                    tabValue.add(new EventBeer(obj.getString("name").toString(),time,lat,lon));
                 }
             } catch (JSONException e) {
                 Log.e("JSON Parser", "Error parsing data " + e.toString());
             }
-            Log.e("tabValue", tabValue.toString());
             return tabValue;
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;

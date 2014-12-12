@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">CallOfBeer</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">CallOfBeer</string>
     <string name="txt_no_beer">no_access_beer</string>
 
 </resources>
