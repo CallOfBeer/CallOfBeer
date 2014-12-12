@@ -108,17 +108,17 @@ public class API {
 
     public static void sendEvent(EventBeer event){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://api.callofbeer.com");
+        HttpPost httppost = new HttpPost("http://api.callofbeer.com/events");
 
         try {
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("eventName", event.getNomEvent()));
-            nameValuePairs.add(new BasicNameValuePair("eventDate", event.getTimer().toString()));
+            Long time = event.getTimer().getTime();
+            nameValuePairs.add(new BasicNameValuePair("eventDate", time.toString()));
             nameValuePairs.add(new BasicNameValuePair("addressLat", Double.toString(event.getLat())));
             nameValuePairs.add(new BasicNameValuePair("addressLon", Double.toString(event.getLongi())));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            Log.w("Timer", event.getTimer().toString());
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
             Log.w("HTTP", response.getStatusLine().toString());
@@ -127,53 +127,6 @@ public class API {
         } catch (IOException e) {
             // TODO Auto-generated catch block
         }
-        /*
-            try {
-                String my_url = "http://api.callofbeer.com";
-                URL url = new URL(my_url);
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-
-                //add reuqest header
-                con.setRequestMethod("POST");
-                con.setRequestProperty("User-Agent", "Mozilla 5.0 (Windows; U; \"\n" +
-                        "        + \"Windows NT 5.1; en-US; rv:1.8.0.11) ");
-                con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-                String urlParameters = "eventName="+event.getNomEvent()+"&eventDate="+event.getTimer()+"&addressLat="+event.getLat()+"&addressLon="+event.getLongi();
-
-                // Send post request
-                con.setDoOutput(true);
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
-
-                int responseCode = con.getResponseCode();
-                Log.w("SEND","\nSending 'POST' request to URL : " + url);
-                Log.w("SEND","Post parameters : " + urlParameters);
-                Log.w("SEND","Response Code : " + responseCode);
-
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                //print result
-                Log.w("SEND",response.toString());
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-*/
 
     }
 
