@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 public class EventBeer {
     private String nomEvent;
     private String adresseEvent;
-    private Timestamp timer;
+    private Long timer;
     private int sizeEvent;
     double lat,longi;
 
@@ -19,18 +19,13 @@ public class EventBeer {
         this.lat = lat;
         this.longi = longi;
     }
-    public EventBeer(String nomEvent, Timestamp timer, double lat, double longi){
+    public EventBeer(String nomEvent, Long timer, double lat, double longi){
         this.nomEvent = nomEvent;
         this.timer = timer;
         this.lat = lat;
         this.longi = longi;
     }
 
-    /*public boolean CreateEvent(){
-        boolean result = false;
-
-        return result;
-    }*/
     public String getNomEvent()
     {
         return nomEvent;
@@ -56,5 +51,5 @@ public class EventBeer {
         return longi;
     }
 
-    public Timestamp getTimer(){return timer;}
+    public Long getTimer(){return timer;}
 }

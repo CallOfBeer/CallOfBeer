@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
+import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -76,8 +77,8 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 if(Util.HttpTest(MapsActivity.this)){ // if network is good
-
                  if(Util.isLocalisationAvailable(MapsActivity.this)){ // if network is good
                         if(markerMe == null){
                             mMap.setOnCameraChangeListener(this);
@@ -144,12 +145,14 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                 Calendar calendar = Calendar.getInstance();
                 java.util.Date now = calendar.getTime();
                 java.sql.Timestamp time = new java.sql.Timestamp(now.getTime());
+                long myTime = time.getTime();
 
+                myTime = Math.round(myTime/1000);
 
                 EditText editText = (EditText) myView.findViewById(R.id.nomevent);
                 String message = editText.getText().toString();
 
-                EventBeer event = new EventBeer(message,time, position.latitude,position.longitude);
+                EventBeer event = new EventBeer(message,myTime, position.latitude,position.longitude);
                 API.sendEvent(event);
             }
         })
@@ -193,7 +196,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                 // no network provider is enabled
             } else {
                 if (isNetworkEnabled) {
-                    lManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,5,20, this);
+                    lManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, this);
                     Log.d("Network", "Network Enabled");
                     if (lManager != null) {
                         location = lManager
@@ -209,7 +212,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                 if (isGPSEnabled) {
                     if (location == null) {
                         lManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,5,20, this);
+                                LocationManager.GPS_PROVIDER,0,0, this);
                         Log.d("GPS", "GPS Enabled");
                         if (lManager != null) {
                             location = lManager

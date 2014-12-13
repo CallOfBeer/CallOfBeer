@@ -93,7 +93,8 @@ public class API {
                     Double lat = geo.getDouble(1);
                     Double lon = geo.getDouble(0);
 
-                    Timestamp time = new java.sql.Timestamp(100000000); // Not a good time
+                    Long time = Long.getLong(obj.getString("date").toString());
+                    // Not a good time
 
                     tabValue.add(new EventBeer(obj.getString("name").toString(),time,lat,lon));
                 }
@@ -115,7 +116,7 @@ public class API {
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("eventName", event.getNomEvent()));
-            Long time = event.getTimer().getTime();
+            Long time = event.getTimer();
             nameValuePairs.add(new BasicNameValuePair("eventDate", time.toString()));
             nameValuePairs.add(new BasicNameValuePair("addressLat", Double.toString(event.getLat())));
             nameValuePairs.add(new BasicNameValuePair("addressLon", Double.toString(event.getLongi())));
