@@ -113,22 +113,6 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                     .title(name)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
         }
-
-        /*
-        *
-        * for(int j = 0 ; j < tab.size() ; j++){
-            //Array List si au dessus de 21 alors Crash
-            Double lat = tab.get(j).getLat();
-            Double lon = tab.get(j).getLongi();
-            LatLng pos = new LatLng(lat,lon);
-            String name = tab.get(j).getNomEvent();
-
-            mMap.addMarker(new MarkerOptions()
-                    .position(pos)
-                    .title(name)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
-        }
-        * */
     }
 
     private ArrayList<LatLng> takeMarker(){
@@ -209,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                 // no network provider is enabled
             } else {
                 if (isNetworkEnabled) {
-                    lManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, this);
+                    lManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,5,20, this);
                     Log.d("Network", "Network Enabled");
                     if (lManager != null) {
                         location = lManager
@@ -225,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                 if (isGPSEnabled) {
                     if (location == null) {
                         lManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,0,0, this);
+                                LocationManager.GPS_PROVIDER,5,20, this);
                         Log.d("GPS", "GPS Enabled");
                         if (lManager != null) {
                             location = lManager
@@ -248,7 +232,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                                 /* implement methods */
     /*-----------------------------------------------------------------------*/
     @Override
-    public void onLocationChanged(Location location) {}
+    public void onLocationChanged(Location location) {markerMe.setPosition(takePosition());}
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
     @Override
