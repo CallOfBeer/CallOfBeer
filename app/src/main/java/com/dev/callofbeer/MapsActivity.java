@@ -83,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                         if(markerMe == null){
                             mMap.setOnCameraChangeListener(this);
                             LatLng pos = takePosition();
-                            update = CameraUpdateFactory.newLatLngZoom(pos,11);
+                            update = CameraUpdateFactory.newLatLngZoom(pos,15);
                             markerMe = mMap.addMarker(new MarkerOptions()
                                     .position(pos)
                                     .title("You")
@@ -171,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
         if(Util.isLocalisationAvailable(MapsActivity.this)) {
             LatLng pos = takePosition();
             markerMe.setPosition(pos);
-            update = CameraUpdateFactory.newLatLngZoom(takePosition(), 11);
+            update = CameraUpdateFactory.newLatLngZoom(takePosition(), 15);
             mMap.animateCamera(update);
             if((pos.latitude == 44.84403344)&&(pos.longitude == -0.58759689)){
                 // Value not changed - GPS none
