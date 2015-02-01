@@ -31,11 +31,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MapsActivity extends FragmentActivity implements View.OnClickListener,LocationListener,GoogleMap.OnCameraChangeListener {
+public class MapsActivity extends FragmentActivity implements LocationListener,GoogleMap.OnCameraChangeListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lManager;
@@ -47,6 +48,9 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
     private int compteurMarker = 0;
     private CameraUpdate update;
 
+
+    private SlidingUpPanelLayout mSlidingLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Permet la connexion et récupération JSON
@@ -55,7 +59,40 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_maps);
-        findViewById(R.id.igab).setOnClickListener(this);
+
+
+        mSlidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mSlidingLayout.setAnchorPoint(0.7f);
+
+        mSlidingLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+                if(v >= 0.7f) {
+                    mSlidingLayout.expandPanel(0.7f);
+                }
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+
+            }
+        });
+
 
         // What do ? at start app
         setUpMapIfNeeded();
@@ -235,7 +272,9 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
                                 /* implement methods */
     /*-----------------------------------------------------------------------*/
     @Override
-    public void onLocationChanged(Location location) {markerMe.setPosition(takePosition());}
+    public void onLocationChanged(Location location) {
+        markerMe.setPosition(takePosition());
+    }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
     @Override
@@ -245,14 +284,4 @@ public class MapsActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {setUpMap();} /* MAJ Event on map*/
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.igab:
-                clickIGotABeer();
-                break;
-            default:
-                break;
-        }
-    }
 }
