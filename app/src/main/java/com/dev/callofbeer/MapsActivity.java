@@ -1,27 +1,29 @@
 package com.dev.callofbeer;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
-import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dev.callofbeer.Model.Authentication;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,8 +35,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.*;
 
 public class MapsActivity extends FragmentActivity implements LocationListener,GoogleMap.OnCameraChangeListener {
 
@@ -43,13 +52,13 @@ public class MapsActivity extends FragmentActivity implements LocationListener,G
     private Location location;
     private String provider;
     private Criteria criteria;
-    private Marker markerMe = null;
     private ArrayList<Marker> marker = new ArrayList<Marker>();
     private int compteurMarker = 0;
     private CameraUpdate update;
-
-
     private SlidingUpPanelLayout mSlidingLayout;
+
+    private WebView webviewLogIn;
+    private Marker markerMe = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,18 @@ public class MapsActivity extends FragmentActivity implements LocationListener,G
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_maps);
 
+        webviewLogIn = (WebView) findViewById(R.id.logInWebView);
+        webviewLogIn.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url){
+                if(url.startsWith("cob")) {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url), getBaseContext(), MapsActivity.class);
+                    startActivity(i);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mSlidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         mSlidingLayout.setAnchorPoint(0.7f);
@@ -104,6 +125,54 @@ public class MapsActivity extends FragmentActivity implements LocationListener,G
 
         // What do ? at return app
         setUpMapIfNeeded();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (findViewById(R.id.logInLayout).getVisibility() == View.VISIBLE) {
+            findViewById(R.id.logInLayout).setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Authentication authentication = new Authentication();
+        Uri uri = intent.getData();
+        if (uri.getEncodedSchemeSpecificPart().equals("//auth")) {
+            String FILENAME = "auth_infos";
+            String access_token = "";
+
+            Pattern pattern = Pattern.compile("access_token=([0-9A-Za-z]{86})");
+            Matcher matcher = pattern.matcher(uri.toString());
+            while(matcher.find()) {
+                access_token = matcher.group(1);
+            }
+
+            authentication.setAccess_token(access_token);
+            Date date = new Date();
+            authentication.setExpiration(new Date(date.getTime() + 3600000));
+            authentication.setType("bearer");
+
+            try {
+                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                String json = ow.writeValueAsString(authentication);
+
+                FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+                fos.write(json.getBytes());
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        findViewById(R.id.logInLayout).setVisibility(View.GONE);
+        super.onNewIntent(intent);
+    }
+
+    public void logIn(View view) {
+        webviewLogIn.loadUrl("http://192.168.1.19:8081/app_dev.php/oauth/v2/auth?client_id=2_3fz2afhgsx4wo0coo84owo40884w08sk400gckg4gsk8kw040g&redirect_uri=cob://auth&response_type=token");
+        findViewById(R.id.logInLayout).setVisibility(View.VISIBLE);
     }
 
     private void setUpMapIfNeeded() {
