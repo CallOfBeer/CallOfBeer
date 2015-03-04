@@ -49,17 +49,142 @@
                     android:textStyle="bold|italic"/>
 
             </LinearLayout>
+
+            <!--ImageView
+                style="@style/beer_background_style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                tools:ignore="ContentDescription"/>-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="true">
+                android:clickable="true"
+                android:background="@drawable/background_beer">
 
-                <TextView
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/app_name"
-                    />
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#ff5c5c5c"
+                        android:alpha="0.5" />
+                    
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/geoloc_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Géolocalisation"
+                            style="@style/OutLineText"
+                            android:textColor="#FFFFFF"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@+id/ll_numberOfPerson"
+                            />
+
+                        <!--ToggleButton
+                            android:id="@+id/toggleButton1"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/custom_toggle"
+                            android:checked="true"
+                            android:text=""
+                            android:textOff=""
+                            android:textOn=""
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/ll_numberOfPerson"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:text="Nom de l'évènement"
+                            android:layout_marginTop="5dp"
+                            style="@style/OutLineText"
+                            />-->
+
+                        <EditText
+                            android:id="@+id/et_title"
+                            android:layout_width="190dp"
+                            android:layout_height="30dp"
+                            android:textSize="12sp"
+                            android:background="@drawable/edittext"
+                            android:padding="5dp"
+                            android:singleLine="true"
+                            android:ellipsize="start"
+                            android:gravity="center"
+                            android:hint="Apéro chez Pedro !"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@+id/tv_title"
+                            />
+
+                        <LinearLayout
+                            android:id="@+id/ll_numberOfPerson"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@+id/et_title"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="20dp"
+                            >
+
+                            <Button
+                                android:id="@+id/b_lessBeer"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/less_beer"
+                                android:layout_marginRight="15dp"
+                               />
+
+                            <TextView
+                                android:id="@+id/tv_numberOfPerson1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/OutLineText"
+                                android:text="J'ai "
+                                />
+
+                            <EditText
+                                android:id="@+id/et_numberOfPerson"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="0"
+                                />
+
+                            <TextView
+                                android:id="@+id/tv_numberOfPerson2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/OutLineText"
+                                android:text=" bière(s) à partager"
+                                />
+
+
+                            <Button
+                                android:id="@+id/b_moreBeer"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="15dp"
+                                android:background="@drawable/more_beer"
+                                />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+
+                </FrameLayout>
 
             </LinearLayout>
         </LinearLayout>
