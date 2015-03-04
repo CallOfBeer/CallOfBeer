@@ -4,191 +4,152 @@
     android:layout_height="match_parent"
     tools:context=".MapActivity">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sliding_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        sothree:panelHeight="68dp"
-        sothree:shadowHeight="4dp"
-        sothree:overlay="false"
-        sothree:paralaxOffset="200dp">
+        android:layout_height="match_parent">
 
-        <fragment
-            android:id="@+id/map"
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/sliding_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="com.google.android.gms.maps.SupportMapFragment" />
+            android:gravity="bottom"
+            sothree:overlay="false"
+            sothree:panelHeight="68dp"
+            sothree:paralaxOffset="200dp"
+            sothree:shadowHeight="4dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#eeeeee"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="false"
-            android:id="@+id/dragView">
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/igab"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="I'VE GOT A BEER !"
-                    android:background="#121212"
-                    android:textColor="#FFF"
-                    android:fontFamily="sans-serif"
-                    android:textStyle="bold|italic"/>
-
-            </LinearLayout>
-
-            <!--ImageView
-                style="@style/beer_background_style"
+                android:id="@+id/dragView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                tools:ignore="ContentDescription"/>-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:background="#eeeeee"
                 android:clickable="true"
-                android:background="@drawable/background_beer">
+                android:focusable="false"
+                android:orientation="vertical">
 
-                <FrameLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="68dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/igab"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="#121212"
+                        android:fontFamily="sans-serif"
+                        android:gravity="center"
+                        android:text="I'VE GOT A BEER !"
+                        android:textColor="#FFF"
+                        android:textStyle="bold|italic" />
+
+                 </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp">
+                    android:background="@drawable/background_beer"
+                    android:clickable="true"
+                    android:orientation="horizontal">
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#ff5c5c5c"
-                        android:alpha="0.5" />
-                    
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="10dp">
+                        android:layout_margin="10dp">
 
-                        <TextView
-                            android:id="@+id/geoloc_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Géolocalisation"
-                            style="@style/OutLineText"
-                            android:textColor="#FFFFFF"
-                            android:layout_alignParentLeft="true"
-                            android:layout_below="@+id/ll_numberOfPerson"
-                            />
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:alpha="0.5"
+                            android:background="#ff5c5c5c" />
 
-                        <!--ToggleButton
-                            android:id="@+id/toggleButton1"
-                            android:layout_width="100dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/custom_toggle"
-                            android:checked="true"
-                            android:text=""
-                            android:textOff=""
-                            android:textOn=""
-                            android:layout_alignParentRight="true"
-                            android:layout_below="@+id/ll_numberOfPerson"
-                            />
-
-                        <TextView
-                            android:id="@+id/tv_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:text="Nom de l'évènement"
-                            android:layout_marginTop="5dp"
-                            style="@style/OutLineText"
-                            />-->
-
-                        <EditText
-                            android:id="@+id/et_title"
-                            android:layout_width="190dp"
-                            android:layout_height="30dp"
-                            android:textSize="12sp"
-                            android:background="@drawable/edittext"
-                            android:padding="5dp"
-                            android:singleLine="true"
-                            android:ellipsize="start"
-                            android:gravity="center"
-                            android:hint="Apéro chez Pedro !"
-                            android:layout_centerHorizontal="true"
-                            android:layout_below="@+id/tv_title"
-                            />
-
-                        <LinearLayout
-                            android:id="@+id/ll_numberOfPerson"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_below="@+id/et_title"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="20dp"
-                            >
-
-                            <Button
-                                android:id="@+id/b_lessBeer"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:background="@drawable/less_beer"
-                                android:layout_marginRight="15dp"
-                               />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp">
 
                             <TextView
-                                android:id="@+id/tv_numberOfPerson1"
+                                android:id="@+id/tv_title"
+                                style="@style/OutLineText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                style="@style/OutLineText"
-                                android:text="J'ai "
-                                />
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="5dp"
+                                android:text="Nom de l'évènement" />
 
                             <EditText
-                                android:id="@+id/et_numberOfPerson"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:hint="0"
-                                />
-
-                            <TextView
-                                android:id="@+id/tv_numberOfPerson2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                style="@style/OutLineText"
-                                android:text=" bière(s) à partager"
-                                />
-
-
-                            <Button
-                                android:id="@+id/b_moreBeer"
-                                android:layout_width="30dp"
+                                android:id="@+id/et_title"
+                                android:layout_width="190dp"
                                 android:layout_height="30dp"
-                                android:layout_marginLeft="15dp"
-                                android:background="@drawable/more_beer"
-                                />
+                                android:layout_below="@+id/tv_title"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/edittext"
+                                android:ellipsize="start"
+                                android:gravity="center"
+                                android:hint="Apéro chez Pedro !"
+                                android:padding="5dp"
+                                android:singleLine="true"
+                                android:textSize="12sp" />
 
-                        </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/ll_numberOfPerson"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/et_title"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="20dp"
+                                android:orientation="horizontal">
 
-                    </RelativeLayout>
+                                <Button
+                                    android:id="@+id/b_lessBeer"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="15dp"
+                                    android:background="@drawable/less_beer" />
+
+                                <TextView
+                                    android:id="@+id/tv_numberOfPerson1"
+                                    style="@style/OutLineText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="J'ai " />
+
+                                <EditText
+                                    android:id="@+id/et_numberOfPerson"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:hint="0" />
+
+                                <TextView
+                                    android:id="@+id/tv_numberOfPerson2"
+                                    style="@style/OutLineText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=" bière(s) à partager" />
 
 
-                </FrameLayout>
+                                <Button
+                                    android:id="@+id/b_moreBeer"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:background="@drawable/more_beer" />
 
+                            </LinearLayout>
+                        </RelativeLayout>
+                    </FrameLayout>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    </RelativeLayout>
 </RelativeLayout>
