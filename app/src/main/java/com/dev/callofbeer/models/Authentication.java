@@ -1,9 +1,15 @@
-package com.dev.callofbeer.Model;
+package com.dev.callofbeer.models;
 
 import java.util.Date;
 
 /**
  * Created by martin on 16/02/15.
+ */
+
+/**
+ * Class Authentication
+ *     Model of the client authentication to the server
+ *
  */
 public class Authentication {
     private String access_token;

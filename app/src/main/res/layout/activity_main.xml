@@ -1,0 +1,43 @@
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/slidinguppanellayout_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:overlay="false"
+    sothree:panelHeight="@dimen/button_height_tall"
+    sothree:paralaxOffset="200dp"
+    sothree:shadowHeight="4dp"
+    tools:context=".CallOfBeerActivity">
+
+    <include layout="@layout/fragment_map" />
+
+    <!-- Linear Layout of sliding panel
+            Containers get the menu and the panel form -->
+
+    <LinearLayout
+        android:id="@+id/linearlayout_dragview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_callofbeer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height_tall"
+            android:fontFamily="sans-serif-thin"
+            android:text="@string/call_of_beer"
+            style="@style/top_panel"
+            />
+
+
+        <!-- Panel form -->
+
+        <include layout="@layout/fragment_panel" />
+
+
+    </LinearLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

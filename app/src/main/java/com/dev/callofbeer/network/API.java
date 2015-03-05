@@ -1,10 +1,11 @@
-package com.dev.callofbeer;
+package com.dev.callofbeer.network;
 
 /**
  * Created by admin on 12/12/2014.
  */
 import android.util.Log;
 
+import com.dev.callofbeer.models.EventBeer;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpResponse;
@@ -19,22 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by yun on 19/11/14.
@@ -76,8 +67,10 @@ public class API {
             Log.e("URL", myurl);
             ArrayList<EventBeer> tabValue = new ArrayList<EventBeer>();
             URL url = new URL(myurl);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
+
             InputStream inputStream = connection.getInputStream();
             String result = API.InputStreamToString(inputStream);
 
@@ -118,8 +111,8 @@ public class API {
             nameValuePairs.add(new BasicNameValuePair("eventName", event.getNomEvent()));
             Long time = event.getTimer();
             nameValuePairs.add(new BasicNameValuePair("eventDate", time.toString()));
-            nameValuePairs.add(new BasicNameValuePair("addressLat", Double.toString(event.getLat())));
-            nameValuePairs.add(new BasicNameValuePair("addressLon", Double.toString(event.getLongi())));
+            nameValuePairs.add(new BasicNameValuePair("addressLat", Double.toString(event.getLatitude())));
+            nameValuePairs.add(new BasicNameValuePair("addressLon", Double.toString(event.getLongitude())));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
