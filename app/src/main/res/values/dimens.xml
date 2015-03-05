@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Size of elements -->
+    <dimen name="button_height_tall">56dp</dimen>
+
+    <!-- Text size -->
+    <dimen name="font_regular">24sp</dimen>
+
+</resources>

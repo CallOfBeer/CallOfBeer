@@ -1,29 +1,34 @@
-package com.dev.callofbeer;
-
-import java.sql.Timestamp;
+package com.dev.callofbeer.models;
 
 /**
  * Created by admin on 12/12/2014.
+ */
+
+
+/**
+ * Class EventBeer
+ *    Model of the events created
+ *
  */
 public class EventBeer {
     private String nomEvent;
     private String adresseEvent;
     private Long timer;
     private int sizeEvent;
-    double lat,longi;
+    double latitude, longitude;
 
-    public EventBeer(String nomEvent, String adresseEvent, int sizeEvent, double lat, double longi){
+    public EventBeer(String nomEvent, String adresseEvent, int sizeEvent, double latitude, double longitude){
         this.nomEvent = nomEvent;
         this.adresseEvent = adresseEvent;
         this.sizeEvent = sizeEvent;
-        this.lat = lat;
-        this.longi = longi;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
-    public EventBeer(String nomEvent, Long timer, double lat, double longi){
+    public EventBeer(String nomEvent, Long timer, double latitude, double longitude){
         this.nomEvent = nomEvent;
         this.timer = timer;
-        this.lat = lat;
-        this.longi = longi;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getNomEvent()
@@ -41,14 +46,14 @@ public class EventBeer {
         return sizeEvent;
     }
 
-    public double getLat()
+    public double getLatitude()
     {
-        return  lat;
+        return latitude;
     }
 
-    public  double getLongi()
+    public  double getLongitude()
     {
-        return longi;
+        return longitude;
     }
 
     public Long getTimer(){return timer;}

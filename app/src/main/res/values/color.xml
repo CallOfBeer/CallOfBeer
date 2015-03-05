@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Basics colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#939393</color>
+    <color name="black">#ff000000</color>
+
+
+    <!--Amber Color-->
+    <color name="R500">#FFC107</color>
+
+    <color name="R50">#FFF8E1</color>
+    <color name="R100">#FFECB3</color>
+    <color name="R200">#FFE082</color>
+    <color name="R300">#FFD54F</color>
+    <color name="R400">#FFCA28</color>
+    <color name="R600">#FFB300</color>
+    <color name="R700">#FFA000</color>
+    <color name="R800">#FF8F00</color>
+    <color name="R900">#FF6F00</color>
+
+    <!-- Accent Red Color -->
+    <color name="A100">#FF8A80</color>
+    <color name="A200">#FF5252</color>
+    <color name="A400">#FF1744</color>
+    <color name="A700">#D50000</color>
+
+</resources>
