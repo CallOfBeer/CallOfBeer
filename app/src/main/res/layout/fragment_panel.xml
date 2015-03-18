@@ -2,12 +2,9 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Panel's view fragment -->
-    <fragment
-        android:id="@+id/fragment_panel"
-        android:name="com.dev.callofbeer.fragments.PanelFragment"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/main_container"
         android:layout_height="match_parent"
-        />
-
+        android:layout_width="match_parent"/>
 
 </merge>

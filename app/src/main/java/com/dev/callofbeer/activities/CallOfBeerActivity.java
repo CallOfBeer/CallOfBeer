@@ -1,13 +1,23 @@
 package com.dev.callofbeer.activities;
 
+import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.Toast;
 
 import com.dev.callofbeer.R;
+import com.dev.callofbeer.fragments.AuthenticationFragment;
 import com.dev.callofbeer.fragments.MapFragment;
+import com.dev.callofbeer.fragments.PanelFragment;
+import com.dev.callofbeer.models.Authentication;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -20,7 +30,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
  *
  *
  */
-public class CallOfBeerActivity extends FragmentActivity {
+public class CallOfBeerActivity extends FragmentActivity implements AuthenticationFragment.OnAuthenticationFragmentInteractionListener {
 
     public static FragmentManager fragmentManager;
 
@@ -40,7 +50,9 @@ public class CallOfBeerActivity extends FragmentActivity {
         mSlidingLayout.setAnchorPoint(0.7f);
         mSlidingLayout.setPanelSlideListener(new SlidingUpPanelView());
 
-
+        FragmentTransaction fragmentTransactionPanel = fragmentManager.beginTransaction();
+        fragmentTransactionPanel.replace(R.id.main_container, new PanelFragment());
+        fragmentTransactionPanel.commit();
     }
 
     private class SlidingUpPanelView implements SlidingUpPanelLayout.PanelSlideListener {
@@ -70,5 +82,45 @@ public class CallOfBeerActivity extends FragmentActivity {
         public void onPanelHidden(View view) {
 
         }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Uri uri = intent.getData();
+        if (uri.getEncodedSchemeSpecificPart().equals("//auth") && getFragmentManager().findFragmentById(R.id.main_container) instanceof AuthenticationFragment) {
+            ((AuthenticationFragment) getFragmentManager().findFragmentById(R.id.main_container)).newCobIntent(intent);
+        }
+        super.onNewIntent(intent);
+    }
+
+    @Override
+    public void onUserLogged() {
+        Authentication authentication = getUserAuth();
+
+        if (authentication != null) {
+            Toast.makeText(this, "Welcome back !", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Authentication Failed", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onUserLoggingFailed() {
+        Toast.makeText(this, "Authentication Failed", Toast.LENGTH_LONG).show();
+    }
+
+    public Authentication getUserAuth() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String authString = sharedPref.getString("user", "null");
+        ObjectMapper mapper = new ObjectMapper();
+        Authentication authentication = null;
+        if (!authString.equals("null")) {
+            try {
+                authentication = mapper.readValue(authString, Authentication.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return authentication;
     }
 }
