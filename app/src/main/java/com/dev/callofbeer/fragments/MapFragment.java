@@ -229,7 +229,8 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
         protected Hashtable<Integer, EventBeer> doInBackground(ArrayList<LatLng>... params) {
             ArrayList<EventBeer> eventBeerArrayList = API.getEvents(params[0]);
             for (EventBeer eventBeer : eventBeerArrayList) {
-                allEventBeers.put(eventBeer.getId(), eventBeer);
+                if(!allEventBeers.containsKey(eventBeer.getId()))
+                    allEventBeers.put(eventBeer.getId(), eventBeer);
             }
             return allEventBeers;
         }
