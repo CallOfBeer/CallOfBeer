@@ -55,23 +55,16 @@ public class CallOfBeerActivity extends FragmentActivity {
         }
 
         @Override
-        public void onPanelCollapsed(View view) {
-
-        }
-
+        public void onPanelCollapsed(View view) {}
         @Override
-        public void onPanelExpanded(View view) {
-
-        }
-
+        public void onPanelExpanded(View view) {}
         @Override
-        public void onPanelAnchored(View view) {
-
-        }
-
+        public void onPanelAnchored(View view) {}
         @Override
-        public void onPanelHidden(View view) {
+        public void onPanelHidden(View view) {}
+    }
 
-        }
+    public void forcedSlidingUp(){
+        mSlidingLayout.expandPanel(0.7f);
     }
 }

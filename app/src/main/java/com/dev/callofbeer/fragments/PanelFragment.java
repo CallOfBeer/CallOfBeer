@@ -17,13 +17,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
  */
 public class PanelFragment extends Fragment {
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.view_panel, container, false);
-
         return view;
     }
 }
