@@ -11,6 +11,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.activities.CallOfBeerActivity;
@@ -26,13 +27,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * Created by matth on 04/03/15.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
 
     private final static double latitude = 44.84403344;
     private final static double longitude = -0.58759689;
@@ -41,13 +45,14 @@ public class MapFragment extends Fragment {
     private Marker mMarker;
     private LatLng position;
     private View view;
+    private Hashtable<Integer, EventBeer> allEventBeers;
 
     private boolean isNetworkListener = false;
     private boolean isGPSListener = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        allEventBeers = new Hashtable<Integer, EventBeer>();
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -82,11 +87,10 @@ public class MapFragment extends Fragment {
 
                     mMarker = mMap.addMarker(new MarkerOptions()
                             .position(position)
-                            .title("You")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.icone_me)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-
+                    mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
                     updateMap();
                 }
             }
@@ -167,6 +171,20 @@ public class MapFragment extends Fragment {
         return position;
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        for(Map.Entry<Integer, EventBeer> entry : allEventBeers.entrySet()) {
+            EventBeer eventBeer = entry.getValue();
+            LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
+
+            if(marker.getPosition().equals(eventPosition)){
+                Toast.makeText(getActivity(),Integer.toString(eventBeer.getId()), Toast.LENGTH_SHORT).show();
+                ((CallOfBeerActivity) getActivity()).forcedSlidingUp();
+            }
+        }
+        return true;
+    }
+
 
     /**
      *
@@ -193,19 +211,11 @@ public class MapFragment extends Fragment {
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
         @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
+        public void onProviderEnabled(String provider) {}
         @Override
-        public void onProviderDisabled(String provider) {
-
-        }
+        public void onProviderDisabled(String provider) {}
     }
 
 
@@ -214,24 +224,30 @@ public class MapFragment extends Fragment {
      * Class of asynchronous task to request API and get new events
      *
      */
-    private class UpdateEventMarker extends AsyncTask<ArrayList<LatLng>, Void, ArrayList<EventBeer>> {
+    private class UpdateEventMarker extends AsyncTask<ArrayList<LatLng>, Void, Hashtable<Integer, EventBeer>> {
         @Override
-        protected ArrayList<EventBeer> doInBackground(ArrayList<LatLng>... params) {
+        protected Hashtable<Integer, EventBeer> doInBackground(ArrayList<LatLng>... params) {
             ArrayList<EventBeer> eventBeerArrayList = API.getEvents(params[0]);
-            return eventBeerArrayList;
+            for (EventBeer eventBeer : eventBeerArrayList) {
+                allEventBeers.put(eventBeer.getId(), eventBeer);
+            }
+            return allEventBeers;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<EventBeer> eventBeers) {
+        protected void onPostExecute(Hashtable<Integer, EventBeer> eventBeers) {
             if(eventBeers != null) {
-                for (EventBeer eventBeer : eventBeers) {
+                for(Map.Entry<Integer, EventBeer> entry : allEventBeers.entrySet()) {
+                    int key = entry.getKey();
+                    EventBeer eventBeer = entry.getValue();
+
                     LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
-                    String eventName = eventBeer.getNomEvent();
 
                     mMap.addMarker(new MarkerOptions()
                             .position(eventPosition)
-                            .title(eventName)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                    // do what you have to do here
+                    // In your case, an other loop.
                 }
             }
         }

@@ -56,7 +56,6 @@ public class PanelFragment extends Fragment implements OnDateSetListener, TimePi
                 timePickerDialog.show(getActivity().getSupportFragmentManager(), TIMEPICKER_TAG);
             }
         });
-
         return view;
     }
 

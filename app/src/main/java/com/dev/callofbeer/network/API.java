@@ -89,7 +89,8 @@ public class API {
                     Long time = Long.getLong(obj.getString("date").toString());
                     // Not a good time
 
-                    tabValue.add(new EventBeer(obj.getString("name").toString(),time,lat,lon));
+                    Log.e("TRY", obj.getString("id").toString());
+                    tabValue.add(new EventBeer(Integer.parseInt(obj.getString("id").toString()),obj.getString("name").toString(),time,lat,lon));
                 }
             } catch (JSONException e) {
                 Log.e("JSON Parser", "Error parsing data " + e.toString());
