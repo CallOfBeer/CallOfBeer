@@ -36,7 +36,9 @@ public class PanelFragment extends Fragment implements OnDateSetListener, TimePi
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), true);
         final TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY) ,calendar.get(Calendar.MINUTE), false, false);
         butDate = (Button) view.findViewById(R.id.dateButton);
-        butDate.setText(calendar.get(Calendar.DAY_OF_MONTH)+"/"+calendar.get(Calendar.MONTH)+"/"+calendar.get(Calendar.YEAR));
+        int month = Calendar.MONTH;
+        month++;
+        butDate.setText(calendar.get(Calendar.DAY_OF_MONTH ) +"/"+ month +"/"+calendar.get(Calendar.YEAR));
         butDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,11 +58,23 @@ public class PanelFragment extends Fragment implements OnDateSetListener, TimePi
                 timePickerDialog.show(getActivity().getSupportFragmentManager(), TIMEPICKER_TAG);
             }
         });
+        if (savedInstanceState != null){
+            DatePickerDialog dpd = (DatePickerDialog) getActivity().getSupportFragmentManager().findFragmentByTag(DATEPICKER_TAG);
+            if (dpd != null) {
+                dpd.setOnDateSetListener(this);
+            }
+            TimePickerDialog tpd = (TimePickerDialog) getActivity().getSupportFragmentManager().findFragmentByTag(TIMEPICKER_TAG);
+            if (tpd != null) {
+                tpd.setOnTimeSetListener(this);
+            }
+        }
+
         return view;
     }
 
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        month++;
         butDate.setText(day + "/" + month + "/" + year);
     }
 
