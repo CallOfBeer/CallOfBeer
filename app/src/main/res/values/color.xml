@@ -6,6 +6,8 @@
     <color name="gray">#939393</color>
     <color name="black">#ff000000</color>
 
+    <color name="transparent">#ffffff</color>
+    <color name="black_semi_transparent">#B2000000</color>
 
     <!--Amber Color-->
     <color name="R500">#FFC107</color>

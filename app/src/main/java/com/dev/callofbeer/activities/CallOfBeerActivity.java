@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.fragments.MapFragment;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -25,6 +26,7 @@ public class CallOfBeerActivity extends FragmentActivity {
     public static FragmentManager fragmentManager;
 
     private SlidingUpPanelLayout mSlidingLayout;
+    private FloatingActionButton button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,9 @@ public class CallOfBeerActivity extends FragmentActivity {
         mSlidingLayout = (SlidingUpPanelLayout) findViewById(R.id.slidinguppanellayout_layout);
         mSlidingLayout.setAnchorPoint(0.7f);
         mSlidingLayout.setPanelSlideListener(new SlidingUpPanelView());
+
+        button = (FloatingActionButton) findViewById(R.id.fab_test);
+        button.setTitle("Test de la mort");
 
 
     }

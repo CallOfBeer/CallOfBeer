@@ -1,20 +1,22 @@
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http;//schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/slidinguppanellayout_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:overlay="false"
-    sothree:panelHeight="@dimen/button_height_tall"
+    sothree:overlay="true"
+    sothree:panelHeight="84dp"
     sothree:paralaxOffset="200dp"
-    sothree:shadowHeight="4dp"
+    sothree:shadowHeight="0dp"
     tools:context=".CallOfBeerActivity">
 
     <include layout="@layout/fragment_map" />
 
     <!-- Linear Layout of sliding panel
             Containers get the menu and the panel form -->
+
 
     <LinearLayout
         android:id="@+id/linearlayout_dragview"
@@ -24,20 +26,76 @@
         android:focusable="false"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_callofbeer"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height_tall"
-            android:fontFamily="sans-serif-thin"
-            android:text="@string/call_of_beer"
-            style="@style/top_panel"
-            />
+            android:layout_height="84dp">
 
+
+            <TextView
+                android:id="@+id/textview_callofbeer"
+                style="@style/top_panel"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_tall"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-thin"
+                android:text="@string/call_of_beer" />
+
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/multiple_actions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                sothree:fab_expandDirection="left"
+                sothree:fab_labelsPosition="left"
+                sothree:fab_addButtonColorNormal="@color/A700"
+                sothree:fab_addButtonColorPressed="@color/A200">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    sothree:fab_size="mini"
+                    sothree:fab_title="Test"
+                    sothree:fab_colorNormal="@color/A200"
+                    sothree:fab_colorPressed="@color/A100"/>
+
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    sothree:fab_size="mini"
+                    sothree:fab_title="Test 2"
+                    sothree:fab_colorNormal="@color/A200"
+                    sothree:fab_colorPressed="@color/A100"/>
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    sothree:fab_size="mini"
+                    sothree:fab_title="Test"
+                    sothree:fab_colorNormal="@color/A200"
+                    sothree:fab_colorPressed="@color/A100"/>
+
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_test"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    sothree:fab_size="mini"
+                    sothree:fab_title="Test 2"
+                    sothree:fab_colorNormal="@color/A200"
+                    sothree:fab_colorPressed="@color/A100"/>
+
+
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+        </RelativeLayout>
 
         <!-- Panel form -->
 
         <include layout="@layout/fragment_panel" />
 
-
     </LinearLayout>
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

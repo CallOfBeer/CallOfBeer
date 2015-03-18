@@ -223,14 +223,16 @@ public class MapFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<EventBeer> eventBeers) {
-            for (EventBeer eventBeer: eventBeers) {
-                LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
-                String eventName = eventBeer.getNomEvent();
+            if(eventBeers != null) {
+                for (EventBeer eventBeer : eventBeers) {
+                    LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
+                    String eventName = eventBeer.getNomEvent();
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(eventPosition)
-                        .title(eventName)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
+                    mMap.addMarker(new MarkerOptions()
+                            .position(eventPosition)
+                            .title(eventName)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
+                }
             }
         }
     }
