@@ -40,55 +40,6 @@
                 android:fontFamily="sans-serif-thin"
                 android:text="@string/call_of_beer" />
 
-            <com.getbase.floatingactionbutton.FloatingActionsMenu
-                android:id="@+id/multiple_actions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                sothree:fab_expandDirection="left"
-                sothree:fab_labelsPosition="left"
-                sothree:fab_addButtonColorNormal="@color/A700"
-                sothree:fab_addButtonColorPressed="@color/A200">
-
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    sothree:fab_size="mini"
-                    sothree:fab_title="Test"
-                    sothree:fab_colorNormal="@color/A200"
-                    sothree:fab_colorPressed="@color/A100"/>
-
-
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    sothree:fab_size="mini"
-                    sothree:fab_title="Test 2"
-                    sothree:fab_colorNormal="@color/A200"
-                    sothree:fab_colorPressed="@color/A100"/>
-
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    sothree:fab_size="mini"
-                    sothree:fab_title="Test"
-                    sothree:fab_colorNormal="@color/A200"
-                    sothree:fab_colorPressed="@color/A100"/>
-
-
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_test"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    sothree:fab_size="mini"
-                    sothree:fab_title="Test 2"
-                    sothree:fab_colorNormal="@color/A200"
-                    sothree:fab_colorPressed="@color/A100"/>
-
-
-            </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
         </RelativeLayout>
 
