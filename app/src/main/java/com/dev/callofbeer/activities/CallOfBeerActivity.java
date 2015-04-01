@@ -1,6 +1,5 @@
 package com.dev.callofbeer.activities;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,8 +14,8 @@ import android.widget.Toast;
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.fragments.CobFloatingMenu;
 import com.dev.callofbeer.fragments.AuthenticationFragment;
+import com.dev.callofbeer.fragments.CreateEventFragment;
 import com.dev.callofbeer.fragments.MapFragment;
-import com.dev.callofbeer.fragments.PanelFragment;
 import com.dev.callofbeer.models.Authentication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -52,10 +51,12 @@ public class CallOfBeerActivity extends FragmentActivity implements Authenticati
         mSlidingLayout.setAnchorPoint(0.7f);
         mSlidingLayout.setPanelSlideListener(new SlidingUpPanelView());
 
+        mSlidingLayout.setDragView(findViewById(R.id.cob_draggable_panel));
+
         menu = (CobFloatingMenu) findViewById(R.id.multiple_actions);
 
         FragmentTransaction fragmentTransactionPanel = fragmentManager.beginTransaction();
-        fragmentTransactionPanel.replace(R.id.main_container, new PanelFragment());
+        fragmentTransactionPanel.replace(R.id.main_container, new CreateEventFragment());
         fragmentTransactionPanel.commit();
     }
 

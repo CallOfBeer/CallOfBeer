@@ -28,7 +28,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="84dp">
+            android:layout_height="84dp"
+            android:id="@+id/cob_draggable_panel">
 
 
             <TextView

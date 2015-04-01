@@ -23,9 +23,9 @@
             android:layout_alignParentTop="true"
             sothree:fab_expandDirection="down"
             sothree:fab_labelsPosition="left"
+            sothree:fab_labelStyle="@style/menu_labels_style"
             sothree:fab_addButtonColorNormal="@color/A700"
-            sothree:fab_addButtonColorPressed="@color/A200"
-            sothree:fab_labelStyle="@style/"/>
+            sothree:fab_addButtonColorPressed="@color/A200"/>
 
     </RelativeLayout>
 </merge>

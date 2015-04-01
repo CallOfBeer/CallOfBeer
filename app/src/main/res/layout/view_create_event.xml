@@ -1,30 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:toggle="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/R100"
     android:clickable="true"
     android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/NameEvent"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/dateButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/NameEvent"
-        android:layout_marginBottom="30dp"
-        android:text="Select Date" />
-    <Button
-        android:id="@+id/timeButton"
-        android:layout_width="wrap_content"
+        android:textSize="@dimen/panel_title"
+        android:text="Create Event"
+        android:gravity="center_horizontal"
+        android:textColor="@color/A200"
+        android:layout_alignParentTop="true"
+        android:id="@+id/create_event_title"/>
+
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/dateButton"
-        android:layout_alignBaseline="@+id/dateButton"
-        android:text="Select Time" />
+        android:layout_below="@+id/create_event_title"
+        android:id="@+id/create_event_name"
+        android:hint="Name"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Event's name"
+        app:met_iconLeft="@drawable/common_ic_googleplayservices"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_event_name">
+
+        <Button
+            android:id="@+id/dateButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginBottom="30dp"
+            android:text="Select Date"
+            android:textColor="@android:color/white"
+            android:background="@color/A400"/>
+        <Button
+            android:id="@+id/timeButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Select Time"
+            android:layout_marginBottom="30dp"
+            android:textColor="@android:color/white"
+            android:background="@color/A400"/>
+
+    </LinearLayout>
     <!--<com.zcw.togglebutton.ToggleButton
         android:layout_width="54dp"
         toggle:onColor="#f00"
