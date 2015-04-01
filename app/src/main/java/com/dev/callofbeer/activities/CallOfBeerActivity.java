@@ -84,7 +84,7 @@ public class CallOfBeerActivity extends FragmentActivity implements Authenticati
     @Override
     public void onNewIntent(Intent intent) {
         Uri uri = intent.getData();
-        if (uri.getEncodedSchemeSpecificPart().equals("//auth") && getFragmentManager().findFragmentById(R.id.main_container) instanceof AuthenticationFragment) {
+        if (uri != null && uri.getEncodedSchemeSpecificPart().equals("//auth") && getFragmentManager().findFragmentById(R.id.main_container) instanceof AuthenticationFragment) {
             ((AuthenticationFragment) getFragmentManager().findFragmentById(R.id.main_container)).newCobIntent(intent);
         }
         super.onNewIntent(intent);
