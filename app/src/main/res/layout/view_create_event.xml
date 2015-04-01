@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/R100"
@@ -24,5 +25,15 @@
         android:layout_toRightOf="@+id/dateButton"
         android:layout_alignBaseline="@+id/dateButton"
         android:text="Select Time" />
+    <!--<com.zcw.togglebutton.ToggleButton
+        android:layout_width="54dp"
+        toggle:onColor="#f00"
+        toggle:offColor="#ddd"
+        toggle:spotColor="#00f"
+        toggle:offBorderColor="#000"
+        toggle:borderWidth="2dp"
+        android:layout_height="30dp"
+        android:below="@+id/dateButton">
+    </com.zcw.togglebutton.ToggleButton> -->
 
 </RelativeLayout>

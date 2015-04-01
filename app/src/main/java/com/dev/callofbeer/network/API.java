@@ -33,6 +33,8 @@ import java.util.List;
 
 public class API {
 
+    public static final String API_BASE = "http://api.callofbeer.com";
+
     /**
      * @param in : buffer with the php result
      * @param bufSize : size of the buffer
@@ -63,7 +65,7 @@ public class API {
 
     public static ArrayList<EventBeer> getEvents(ArrayList<LatLng> screen) {
         try {
-            String myurl= "http://api.callofbeer.com/events?topLat="+screen.get(0).latitude+"&topLon="+screen.get(0).longitude+"&botLat="+screen.get(1).latitude+"&botLon="+screen.get(1).longitude+"";
+            String myurl= API_BASE+"/events?topLat="+screen.get(0).latitude+"&topLon="+screen.get(0).longitude+"&botLat="+screen.get(1).latitude+"&botLon="+screen.get(1).longitude+"";
             Log.e("URL", myurl);
             ArrayList<EventBeer> tabValue = new ArrayList<EventBeer>();
             URL url = new URL(myurl);
@@ -104,7 +106,7 @@ public class API {
 
     public static void sendEvent(EventBeer event){
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("http://api.callofbeer.com/events");
+        HttpPost httppost = new HttpPost(API_BASE+"/events");
 
         try {
             // Add your data
