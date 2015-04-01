@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.dev.callofbeer.R;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class CobFloatingMenu extends FloatingActionsMenu {
         FloatingActionButton button3 = new FloatingActionButton(getContext());
         button3.setColorNormal(getResources().getColor(R.color.R600));
         button3.setColorPressed(getResources().getColor(R.color.R400));
-        button3.setIcon(R.drawable.biere);
+        button3.setIcon(R.drawable.common_signin_btn_text_normal_light);
         button3.setSize(FloatingActionButton.SIZE_MINI);
         button3.setOnClickListener(new OnClickListener() {
             @Override

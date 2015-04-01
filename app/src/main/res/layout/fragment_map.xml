@@ -24,7 +24,8 @@
             sothree:fab_expandDirection="down"
             sothree:fab_labelsPosition="left"
             sothree:fab_addButtonColorNormal="@color/A700"
-            sothree:fab_addButtonColorPressed="@color/A200"/>
+            sothree:fab_addButtonColorPressed="@color/A200"
+            sothree:fab_labelStyle="@style/"/>
 
     </RelativeLayout>
 </merge>
