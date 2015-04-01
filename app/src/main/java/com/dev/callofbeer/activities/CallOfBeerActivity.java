@@ -51,6 +51,8 @@ public class CallOfBeerActivity extends FragmentActivity implements Authenticati
         mSlidingLayout.setAnchorPoint(0.7f);
         mSlidingLayout.setPanelSlideListener(new SlidingUpPanelView());
 
+        mSlidingLayout.setDragView(findViewById(R.id.cob_draggable_panel));
+
         menu = (CobFloatingMenu) findViewById(R.id.multiple_actions);
 
         FragmentTransaction fragmentTransactionPanel = fragmentManager.beginTransaction();
