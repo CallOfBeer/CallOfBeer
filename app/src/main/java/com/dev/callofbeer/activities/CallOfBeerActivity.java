@@ -1,8 +1,6 @@
 package com.dev.callofbeer.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,8 +14,10 @@ import com.dev.callofbeer.fragments.CobFloatingMenu;
 import com.dev.callofbeer.fragments.AuthenticationFragment;
 import com.dev.callofbeer.fragments.CreateEventFragment;
 import com.dev.callofbeer.fragments.MapFragment;
-import com.dev.callofbeer.models.Authentication;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dev.callofbeer.models.authentication.Authentication;
+import com.dev.callofbeer.models.authentication.User;
+import com.dev.callofbeer.models.authentication.UserSave;
+import com.dev.callofbeer.utils.UserManager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -30,17 +30,66 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
  *
  *
  */
-public class CallOfBeerActivity extends FragmentActivity implements AuthenticationFragment.OnAuthenticationFragmentInteractionListener {
+public class CallOfBeerActivity extends FragmentActivity {
 
     public static FragmentManager fragmentManager;
 
     private SlidingUpPanelLayout mSlidingLayout;
     private CobFloatingMenu menu;
 
+    private UserManager userManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userManager = new UserManager(this, new UserManager.OnUserEventsListener() {
+            @Override
+            public void onUserRegistered(User user) {
+                Toast.makeText(getBaseContext(), "Welcome " + user.getUsername() + "!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserRegisterFailed() {
+                Toast.makeText(getBaseContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserLogged(Authentication authentication) {
+                Toast.makeText(getBaseContext(), "You're now logged", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserLoginFailed() {
+                Toast.makeText(getBaseContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserPulled(UserSave userSave) {
+                Toast.makeText(getBaseContext(), userSave.getUser().getUsername() + " pulled !", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserPulledError() {
+                Toast.makeText(getBaseContext(), "User Pull Failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserSaved(UserSave userSave) {
+                Toast.makeText(getBaseContext(), "User Saved", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserLogout() {
+                Toast.makeText(getBaseContext(), "Logged out", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserUnlogged() {
+                Toast.makeText(getBaseContext(), "No User Logged", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -54,10 +103,15 @@ public class CallOfBeerActivity extends FragmentActivity implements Authenticati
         mSlidingLayout.setDragView(findViewById(R.id.cob_draggable_panel));
 
         menu = (CobFloatingMenu) findViewById(R.id.multiple_actions);
+        menu.setActivity(this);
 
         FragmentTransaction fragmentTransactionPanel = fragmentManager.beginTransaction();
         fragmentTransactionPanel.replace(R.id.main_container, new CreateEventFragment());
         fragmentTransactionPanel.commit();
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
     }
 
     private class SlidingUpPanelView implements SlidingUpPanelLayout.PanelSlideListener {
@@ -86,39 +140,14 @@ public class CallOfBeerActivity extends FragmentActivity implements Authenticati
     public void onNewIntent(Intent intent) {
         Uri uri = intent.getData();
         if (uri != null && uri.getEncodedSchemeSpecificPart().equals("//auth") && getFragmentManager().findFragmentById(R.id.main_container) instanceof AuthenticationFragment) {
-            ((AuthenticationFragment) getFragmentManager().findFragmentById(R.id.main_container)).newCobIntent(intent);
+            userManager.newCobLoginIntent(intent);
         }
         super.onNewIntent(intent);
     }
 
-    @Override
-    public void onUserLogged() {
-        Authentication authentication = getUserAuth();
-
-        if (authentication != null) {
-            Toast.makeText(this, "Welcome back !", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Authentication Failed", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onUserLoggingFailed() {
-        Toast.makeText(this, "Authentication Failed", Toast.LENGTH_LONG).show();
-    }
-
-    public Authentication getUserAuth() {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        String authString = sharedPref.getString("user", "null");
-        ObjectMapper mapper = new ObjectMapper();
-        Authentication authentication = null;
-        if (!authString.equals("null")) {
-            try {
-                authentication = mapper.readValue(authString, Authentication.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return authentication;
+    public void startLogin() {
+        AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance(true);
+        getFragmentManager().beginTransaction().replace(R.id.main_container, authenticationFragment).commit();
+        mSlidingLayout.expandPanel(0.7f);
     }
 }

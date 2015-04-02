@@ -1,11 +1,13 @@
 package com.dev.callofbeer.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
 import com.dev.callofbeer.R;
+import com.dev.callofbeer.activities.CallOfBeerActivity;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -13,6 +15,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import java.util.List;
 
 public class CobFloatingMenu extends FloatingActionsMenu {
+
+    Activity activity;
 
     public CobFloatingMenu(Context context) {
         super(context);
@@ -35,16 +39,20 @@ public class CobFloatingMenu extends FloatingActionsMenu {
         }
     }
 
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
     public void initMenu() {
         FloatingActionButton button2 = new FloatingActionButton(getContext());
         button2.setColorNormal(getResources().getColor(R.color.A200));
         button2.setColorPressed(getResources().getColor(R.color.A100));
         button2.setSize(FloatingActionButton.SIZE_MINI);
-        button2.setIcon(R.drawable.common_signin_btn_text_normal_light);
+        button2.setIcon(R.drawable.user);
         button2.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Coucou", Toast.LENGTH_SHORT).show();
+                ((CallOfBeerActivity) activity).startLogin();
             }
         });
         this.addButton(button2);
