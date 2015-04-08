@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Panel's view fragment -->
-    <fragment
-        android:id="@+id/fragment_panel"
-        android:name="com.dev.callofbeer.fragments.PanelFragment"
-        android:layout_width="match_parent"
+    <RelativeLayout
         android:layout_height="match_parent"
-        />
+        android:layout_width="match_parent">
 
+        <!-- Panel's view fragment -->
+        <FrameLayout
+            android:id="@+id/main_container"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_semi_transparent"
+            android:id="@+id/globalProgress"
+            android:visibility="gone">
+
+            <ProgressBar android:id="@+id/progressBar" style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </merge>

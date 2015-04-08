@@ -1,6 +1,8 @@
 package com.dev.callofbeer.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -11,6 +13,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.activities.CallOfBeerActivity;
@@ -26,13 +29,20 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * Created by matth on 04/03/15.
  */
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickListener {
 
     private final static double latitude = 44.84403344;
     private final static double longitude = -0.58759689;
@@ -41,13 +51,32 @@ public class MapFragment extends Fragment {
     private Marker mMarker;
     private LatLng position;
     private View view;
+    private Hashtable<Integer, EventBeer> allEventBeers;
 
     private boolean isNetworkListener = false;
     private boolean isGPSListener = false;
 
+    private Target mTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            // Do whatever you want with the Bitmap
+            mMarker = mMap.addMarker(new MarkerOptions()
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        allEventBeers = new Hashtable<Integer, EventBeer>();
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -80,13 +109,14 @@ public class MapFragment extends Fragment {
                     mMap.setOnCameraChangeListener(new CameraChangeListener());
                     position = getPosition(latitude, longitude);
 
-                    mMarker = mMap.addMarker(new MarkerOptions()
-                            .position(position)
-                            .title("You")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.icone_me)));
+                    Picasso.with(getActivity())
+                            .load(R.drawable.user)
+                            .transform(new CropCircleTransformation())
+                            .resize(80, 80)
+                            .into(mTarget);
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-
+                    mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
                     updateMap();
                 }
             }
@@ -167,6 +197,20 @@ public class MapFragment extends Fragment {
         return position;
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        for(Map.Entry<Integer, EventBeer> entry : allEventBeers.entrySet()) {
+            EventBeer eventBeer = entry.getValue();
+            LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
+
+            if(marker.getPosition().equals(eventPosition)){
+                Toast.makeText(getActivity(),Integer.toString(eventBeer.getId()), Toast.LENGTH_SHORT).show();
+                ((CallOfBeerActivity) getActivity()).forcedSlidingUp();
+            }
+        }
+        return true;
+    }
+
 
     /**
      *
@@ -189,23 +233,17 @@ public class MapFragment extends Fragment {
     private class LocationListener implements android.location.LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            mMarker.setPosition(getPosition(position.latitude, position.longitude));
+            if (mMarker != null) {
+                mMarker.setPosition(getPosition(position.latitude, position.longitude));
+            }
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
         @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
+        public void onProviderEnabled(String provider) {}
         @Override
-        public void onProviderDisabled(String provider) {
-
-        }
+        public void onProviderDisabled(String provider) {}
     }
 
 
@@ -214,23 +252,35 @@ public class MapFragment extends Fragment {
      * Class of asynchronous task to request API and get new events
      *
      */
-    private class UpdateEventMarker extends AsyncTask<ArrayList<LatLng>, Void, ArrayList<EventBeer>> {
+    private class UpdateEventMarker extends AsyncTask<ArrayList<LatLng>, Void, Hashtable<Integer, EventBeer>> {
         @Override
-        protected ArrayList<EventBeer> doInBackground(ArrayList<LatLng>... params) {
+        protected Hashtable<Integer, EventBeer> doInBackground(ArrayList<LatLng>... params) {
             ArrayList<EventBeer> eventBeerArrayList = API.getEvents(params[0]);
-            return eventBeerArrayList;
+            if (eventBeerArrayList == null) {
+                return null;
+            }
+            for (EventBeer eventBeer : eventBeerArrayList) {
+                if(!allEventBeers.containsKey(eventBeer.getId()))
+                    allEventBeers.put(eventBeer.getId(), eventBeer);
+            }
+            return allEventBeers;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<EventBeer> eventBeers) {
-            for (EventBeer eventBeer: eventBeers) {
-                LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
-                String eventName = eventBeer.getNomEvent();
+        protected void onPostExecute(Hashtable<Integer, EventBeer> eventBeers) {
+            if(eventBeers != null) {
+                for(Map.Entry<Integer, EventBeer> entry : allEventBeers.entrySet()) {
+                    int key = entry.getKey();
+                    EventBeer eventBeer = entry.getValue();
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(eventPosition)
-                        .title(eventName)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biere)));
+                    LatLng eventPosition = new LatLng(eventBeer.getLatitude(), eventBeer.getLongitude());
+
+                    mMap.addMarker(new MarkerOptions()
+                            .position(eventPosition)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                    // do what you have to do here
+                    // In your case, an other loop.
+                }
             }
         }
     }

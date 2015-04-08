@@ -1,4 +1,4 @@
-package com.dev.callofbeer.models;
+package com.dev.callofbeer.models.authentication;
 
 import java.util.Date;
 

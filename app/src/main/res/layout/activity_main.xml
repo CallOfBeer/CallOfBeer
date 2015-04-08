@@ -1,20 +1,22 @@
-<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http;//schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/slidinguppanellayout_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:overlay="false"
-    sothree:panelHeight="@dimen/button_height_tall"
+    sothree:overlay="true"
+    sothree:panelHeight="84dp"
     sothree:paralaxOffset="200dp"
-    sothree:shadowHeight="4dp"
+    sothree:shadowHeight="0dp"
     tools:context=".CallOfBeerActivity">
 
     <include layout="@layout/fragment_map" />
 
     <!-- Linear Layout of sliding panel
             Containers get the menu and the panel form -->
+
 
     <LinearLayout
         android:id="@+id/linearlayout_dragview"
@@ -24,20 +26,28 @@
         android:focusable="false"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textview_callofbeer"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height_tall"
-            android:fontFamily="sans-serif-thin"
-            android:text="@string/call_of_beer"
-            style="@style/top_panel"
-            />
+            android:layout_height="84dp"
+            android:id="@+id/cob_draggable_panel">
 
+
+            <TextView
+                android:id="@+id/textview_callofbeer"
+                style="@style/top_panel"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_tall"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-thin"
+                android:text="@string/call_of_beer" />
+
+
+        </RelativeLayout>
 
         <!-- Panel form -->
 
         <include layout="@layout/fragment_panel" />
 
-
     </LinearLayout>
+
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

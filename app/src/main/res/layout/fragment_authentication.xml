@@ -1,0 +1,145 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/R100"
+    tools:context="com.dev.callofbeer.fragments.AuthenticationFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/cob_authent_login_layout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:id="@+id/cob_authent_login_title"
+            android:textColor="@color/A200"
+            android:textSize="@dimen/panel_title"
+            android:text="Login"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_login_title"
+            android:id="@+id/cob_authent_login_username"
+            android:hint="Username"
+            android:singleLine="true"
+            android:nextFocusForward="@+id/cob_authent_login_password"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Username"
+            app:met_iconLeft="@drawable/user"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_login_username"
+            android:id="@+id/cob_authent_login_password"
+            android:hint="Password"
+            android:singleLine="true"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Password"
+            app:met_iconLeft="@drawable/password"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_login_password"
+            android:id="@+id/cob_authent_login_button"
+            android:text="Login"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_login_button"
+            android:id="@+id/cob_authent_to_register_button"
+            android:text="Register"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:visibility="gone"
+        android:id="@+id/cob_authent_register_layout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:id="@+id/cob_authent_register_title"
+            android:textColor="@color/A200"
+            android:textSize="@dimen/panel_title"
+            android:text="Register"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_register_title"
+            android:id="@+id/cob_authent_register_username"
+            android:hint="Username"
+            android:singleLine="true"
+            android:nextFocusForward="@+id/cob_authent_register_email"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Username"
+            app:met_iconLeft="@drawable/user"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_register_username"
+            android:id="@+id/cob_authent_register_email"
+            android:hint="Email"
+            android:singleLine="true"
+            android:nextFocusForward="@+id/cob_authent_register_password"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Email"
+            app:met_iconLeft="@drawable/email"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_register_email"
+            android:id="@+id/cob_authent_register_password"
+            android:hint="Password"
+            android:singleLine="true"
+            android:nextFocusForward="@+id/cob_authent_register_password_repeat"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Password"
+            app:met_iconLeft="@drawable/password"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_register_password"
+            android:id="@+id/cob_authent_register_password_repeat"
+            android:hint="Repeat your password"
+            app:met_floatingLabel="highlight"
+            android:singleLine="true"
+            app:met_floatingLabelText="Repeat your password"
+            app:met_iconLeft="@drawable/password"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_register_password_repeat"
+            android:id="@+id/cob_authent_register_button"
+            android:text="Register"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cob_authent_register_button"
+            android:id="@+id/cob_authent_to_login_button"
+            android:text="Or login"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
