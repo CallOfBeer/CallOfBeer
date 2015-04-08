@@ -1,6 +1,8 @@
 package com.dev.callofbeer.fragments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -28,10 +30,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * Created by matth on 04/03/15.
@@ -49,6 +55,24 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
 
     private boolean isNetworkListener = false;
     private boolean isGPSListener = false;
+
+    private Target mTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            // Do whatever you want with the Bitmap
+            mMarker = mMap.addMarker(new MarkerOptions()
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap)));
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -85,9 +109,11 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
                     mMap.setOnCameraChangeListener(new CameraChangeListener());
                     position = getPosition(latitude, longitude);
 
-                    mMarker = mMap.addMarker(new MarkerOptions()
-                            .position(position)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    Picasso.with(getActivity())
+                            .load(R.drawable.user)
+                            .transform(new CropCircleTransformation())
+                            .resize(80, 80)
+                            .into(mTarget);
 
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
                     mMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
@@ -207,7 +233,9 @@ public class MapFragment extends Fragment implements GoogleMap.OnMarkerClickList
     private class LocationListener implements android.location.LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            mMarker.setPosition(getPosition(position.latitude, position.longitude));
+            if (mMarker != null) {
+                mMarker.setPosition(getPosition(position.latitude, position.longitude));
+            }
         }
 
         @Override

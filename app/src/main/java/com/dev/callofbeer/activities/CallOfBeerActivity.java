@@ -7,6 +7,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.dev.callofbeer.R;
@@ -39,10 +43,14 @@ public class CallOfBeerActivity extends FragmentActivity {
 
     private UserManager userManager;
 
+    private RelativeLayout loadingProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadingProgress = (RelativeLayout) findViewById(R.id.globalProgress);
 
         userManager = new UserManager(this, new UserManager.OnUserEventsListener() {
             @Override
@@ -68,6 +76,7 @@ public class CallOfBeerActivity extends FragmentActivity {
             @Override
             public void onUserPulled(UserSave userSave) {
                 Toast.makeText(getBaseContext(), userSave.getUser().getUsername() + " pulled !", Toast.LENGTH_SHORT).show();
+                toogleProgressBar(false);
             }
 
             @Override
@@ -84,6 +93,7 @@ public class CallOfBeerActivity extends FragmentActivity {
             public void onUserLogout() {
                 Toast.makeText(getBaseContext(), "Logged out", Toast.LENGTH_SHORT).show();
             }
+
 
             @Override
             public void onUserUnlogged() {
@@ -149,5 +159,13 @@ public class CallOfBeerActivity extends FragmentActivity {
         AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance(true);
         getFragmentManager().beginTransaction().replace(R.id.main_container, authenticationFragment).commit();
         mSlidingLayout.expandPanel(0.7f);
+    }
+
+    public void toogleProgressBar(boolean b) {
+        if (b) {
+            loadingProgress.setVisibility(View.VISIBLE);
+        } else {
+            loadingProgress.setVisibility(View.GONE);
+        }
     }
 }

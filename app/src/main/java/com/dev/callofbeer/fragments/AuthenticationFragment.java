@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.activities.CallOfBeerActivity;
@@ -73,7 +75,18 @@ public class AuthenticationFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((CallOfBeerActivity) getActivity()).getUserManager().logByUsernamePassword(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+                startLogin();
+            }
+        });
+
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == KeyEvent.KEYCODE_ENTER) {
+                    startLogin();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -96,11 +109,18 @@ public class AuthenticationFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((CallOfBeerActivity) getActivity()).getUserManager().registerByUsernameEmailPassword(
-                        usernameRegisterEditText.getText().toString(),
-                        emailRegisterEditText.getText().toString(),
-                        passwordRegisterEditText.getText().toString()
-                );
+                startRegister();
+            }
+        });
+
+        passwordRepeatRegisterEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == KeyEvent.KEYCODE_ENTER) {
+                    startRegister();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -134,5 +154,19 @@ public class AuthenticationFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    private void startLogin() {
+        ((CallOfBeerActivity) getActivity()).getUserManager().logByUsernamePassword(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+        ((CallOfBeerActivity) getActivity()).toogleProgressBar(true);
+    }
+
+    private void startRegister() {
+        ((CallOfBeerActivity) getActivity()).getUserManager().registerByUsernameEmailPassword(
+                usernameRegisterEditText.getText().toString(),
+                emailRegisterEditText.getText().toString(),
+                passwordRegisterEditText.getText().toString()
+        );
+        ((CallOfBeerActivity) getActivity()).toogleProgressBar(true);
     }
 }
