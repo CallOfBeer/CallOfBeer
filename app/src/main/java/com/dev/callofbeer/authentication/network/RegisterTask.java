@@ -1,12 +1,11 @@
-package com.dev.callofbeer.network;
+package com.dev.callofbeer.authentication.network;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.dev.callofbeer.fragments.AuthenticationFragment;
 import com.dev.callofbeer.models.authentication.User;
-import com.dev.callofbeer.utils.UserManager;
+import com.dev.callofbeer.authentication.utils.UserManager;
+import com.dev.callofbeer.network.API;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.InputStream;
@@ -70,10 +69,5 @@ public class RegisterTask extends AsyncTask<String, String, User> {
         }
 
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(User result) {
-        userManager.registerResponse(result, password);
     }
 }

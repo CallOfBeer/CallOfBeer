@@ -1,19 +1,20 @@
 package com.dev.callofbeer.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.dev.callofbeer.R;
+import com.dev.callofbeer.authentication.utils.Config;
 import com.dev.callofbeer.fragments.CobFloatingMenu;
 import com.dev.callofbeer.fragments.AuthenticationFragment;
 import com.dev.callofbeer.fragments.CreateEventFragment;
@@ -21,8 +22,10 @@ import com.dev.callofbeer.fragments.MapFragment;
 import com.dev.callofbeer.models.authentication.Authentication;
 import com.dev.callofbeer.models.authentication.User;
 import com.dev.callofbeer.models.authentication.UserSave;
-import com.dev.callofbeer.utils.UserManager;
+import com.dev.callofbeer.authentication.utils.UserManager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.util.List;
 
 /**
  * Created by matth on 04/03/15.
@@ -51,55 +54,6 @@ public class CallOfBeerActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
 
         loadingProgress = (RelativeLayout) findViewById(R.id.globalProgress);
-
-        userManager = new UserManager(this, new UserManager.OnUserEventsListener() {
-            @Override
-            public void onUserRegistered(User user) {
-                Toast.makeText(getBaseContext(), "Welcome " + user.getUsername() + "!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUserRegisterFailed() {
-                Toast.makeText(getBaseContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUserLogged(Authentication authentication) {
-                Toast.makeText(getBaseContext(), "You're now logged", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUserLoginFailed() {
-                Toast.makeText(getBaseContext(), "Login Failed", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUserPulled(UserSave userSave) {
-                Toast.makeText(getBaseContext(), userSave.getUser().getUsername() + " pulled !", Toast.LENGTH_SHORT).show();
-                toogleProgressBar(false);
-            }
-
-            @Override
-            public void onUserPulledError() {
-                Toast.makeText(getBaseContext(), "User Pull Failed", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUserSaved(UserSave userSave) {
-                Toast.makeText(getBaseContext(), "User Saved", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onUserLogout() {
-                Toast.makeText(getBaseContext(), "Logged out", Toast.LENGTH_SHORT).show();
-            }
-
-
-            @Override
-            public void onUserUnlogged() {
-                Toast.makeText(getBaseContext(), "No User Logged", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -146,19 +100,12 @@ public class CallOfBeerActivity extends FragmentActivity {
         mSlidingLayout.expandPanel(0.7f);
     }
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        Uri uri = intent.getData();
-        if (uri != null && uri.getEncodedSchemeSpecificPart().equals("//auth") && getFragmentManager().findFragmentById(R.id.main_container) instanceof AuthenticationFragment) {
-            userManager.newCobLoginIntent(intent);
-        }
-        super.onNewIntent(intent);
-    }
-
     public void startLogin() {
-        AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance(true);
+        AccountManager accountManager = AccountManager.get(this);
+        accountManager.addAccount(Config.COB_USER_TYPE, "access_token", null, null, this, null, null);
+        /*AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance(true);
         getFragmentManager().beginTransaction().replace(R.id.main_container, authenticationFragment).commit();
-        mSlidingLayout.expandPanel(0.7f);
+        mSlidingLayout.expandPanel(0.7f);*/
     }
 
     public void toogleProgressBar(boolean b) {

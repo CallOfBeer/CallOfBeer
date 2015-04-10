@@ -128,7 +128,7 @@ public class AuthenticationFragment extends Fragment {
             if (getActivity() == null) {
                 toLogout = true;
             } else {
-                ((CallOfBeerActivity) getActivity()).getUserManager().logoutUser();
+                //((CallOfBeerActivity) getActivity()).getUserManager().logoutUser();
             }
         }
 
@@ -157,16 +157,16 @@ public class AuthenticationFragment extends Fragment {
     }
 
     private void startLogin() {
-        ((CallOfBeerActivity) getActivity()).getUserManager().logByUsernamePassword(usernameEditText.getText().toString(), passwordEditText.getText().toString());
+        //((CallOfBeerActivity) getActivity()).getUserManager().logByUsernamePassword(usernameEditText.getText().toString(), passwordEditText.getText().toString());
         ((CallOfBeerActivity) getActivity()).toogleProgressBar(true);
     }
 
     private void startRegister() {
-        ((CallOfBeerActivity) getActivity()).getUserManager().registerByUsernameEmailPassword(
+        /*((CallOfBeerActivity) getActivity()).getUserManager().registerByUsernameEmailPassword(
                 usernameRegisterEditText.getText().toString(),
                 emailRegisterEditText.getText().toString(),
                 passwordRegisterEditText.getText().toString()
-        );
+        );*/
         ((CallOfBeerActivity) getActivity()).toogleProgressBar(true);
     }
 }

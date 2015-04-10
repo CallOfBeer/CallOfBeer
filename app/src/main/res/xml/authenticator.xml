@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="com.callofbeer"
+    android:icon="@drawable/ic_bierres"
+    android:smallIcon="@drawable/ic_bierres"
+    android:label="@string/call_of_beer"
+    android:accountPreferences="@xml/prefs"/>
