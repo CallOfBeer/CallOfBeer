@@ -2,6 +2,7 @@ package com.dev.callofbeer.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -101,8 +102,17 @@ public class CallOfBeerActivity extends FragmentActivity {
     }
 
     public void startLogin() {
-        AccountManager accountManager = AccountManager.get(this);
-        accountManager.addAccount(Config.COB_USER_TYPE, "access_token", null, null, this, null, null);
+        try {
+            AccountManager accountManager = AccountManager.get(this);
+            Account[] accts = accountManager.getAccountsByType(Config.COB_USER_TYPE);
+            Account acct = accts[0];
+            AccountManagerFuture<Bundle> accountManagerFuture = accountManager.getAuthToken(acct, Config.COB_USER_TYPE, null, this, null, null);
+            Bundle authTokenBundle = accountManagerFuture.getResult();
+            String authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
+            Log.i("AuthToken", authToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /*AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance(true);
         getFragmentManager().beginTransaction().replace(R.id.main_container, authenticationFragment).commit();
         mSlidingLayout.expandPanel(0.7f);*/

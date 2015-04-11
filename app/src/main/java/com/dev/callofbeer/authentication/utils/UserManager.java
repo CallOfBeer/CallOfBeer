@@ -1,7 +1,10 @@
 package com.dev.callofbeer.authentication.utils;
 
+import android.util.Log;
+
 import com.dev.callofbeer.authentication.models.Authorization;
 import com.dev.callofbeer.authentication.network.LoginTask;
+import com.dev.callofbeer.models.authentication.User;
 import com.dev.callofbeer.network.API;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -70,6 +73,40 @@ public class UserManager {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static User register(String client_id, String client_secret, String username, String email, String password) {
+        try {
+            URL url = new URL(Config.COB_BASE_URL + "/app_dev.php/users");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            connection.setRequestMethod("POST");
+
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write("username=" + username + "&email=" + email + "&password=" + password + "&client_id=" + client_id + "&client_secret=" + client_secret);
+            writer.flush();
+            connection.connect();
+
+            InputStream inputStream = connection.getInputStream();
+
+            String response = API.InputStreamToString(inputStream);
+
+            ObjectMapper mapper = new ObjectMapper();
+            User user = mapper.readValue(response, User.class);
+
+            writer.close();
+
+            if (connection.getResponseCode() == 200) {
+                return user;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

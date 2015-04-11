@@ -9,6 +9,8 @@ public class Authorization {
     private String token_type;
     private String scope;
     private String refresh_token;
+    private String error;
+    private String error_description;
 
     public String getAccess_token() {
         return access_token;
@@ -48,5 +50,21 @@ public class Authorization {
 
     public void setRefresh_token(String refresh_token) {
         this.refresh_token = refresh_token;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getError_description() {
+        return error_description;
+    }
+
+    public void setError_description(String error_description) {
+        this.error_description = error_description;
     }
 }

@@ -6,66 +6,56 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.Toast;
 
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.authentication.models.Authorization;
-import com.dev.callofbeer.authentication.network.LoginTask;
 import com.dev.callofbeer.authentication.utils.Config;
 import com.dev.callofbeer.authentication.utils.UserManager;
+import com.dev.callofbeer.models.authentication.User;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class CobAuthenticatorActivity extends AccountAuthenticatorActivity implements LoaderCallbacks<Cursor> {
+public class CobAuthenticatorActivity extends AccountAuthenticatorActivity {
 
-    public static final String ARG_ACCOUNT_TYPE = "";
+    public static final String ARG_ACCOUNT_TYPE = "com.callofbeer";
     public static final String ARG_AUTH_TYPE = "";
     public static final String ARG_IS_ADDING_NEW_ACCOUNT = "";
 
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private UserRegisterTask mRegisterTask = null;
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private MaterialEditText usernameEditText;
+    private MaterialEditText passwordEditText;
+
+    private MaterialEditText usernameRegisterEditText;
+    private MaterialEditText emailRegisterEditText;
+    private MaterialEditText passwordRegisterEditText;
+    private MaterialEditText passwordRepeatRegisterEditText;
+
     private View mProgressView;
     private View mLoginFormView;
+    private View mRegisterFormView;
+    private View mActiveView;
+
     private AccountManager accountManager;
 
     @Override
@@ -77,15 +67,21 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
             accountManager = AccountManager.get(this);
         }
 
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+        mLoginFormView = findViewById(R.id.cob_authent_login_layout);
+        mRegisterFormView = findViewById(R.id.cob_authent_register_layout);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mProgressView = findViewById(R.id.login_progress);
+
+        mActiveView = mLoginFormView;
+
+        // Set up the login form.
+        usernameEditText = (MaterialEditText) findViewById(R.id.cob_authent_login_username);
+
+        passwordEditText = (MaterialEditText) findViewById(R.id.cob_authent_login_password);
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == KeyEvent.KEYCODE_ENTER) {
                     attemptLogin();
                     return true;
                 }
@@ -93,22 +89,61 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        usernameRegisterEditText = (MaterialEditText) findViewById(R.id.cob_authent_register_username);
+        emailRegisterEditText = (MaterialEditText) findViewById(R.id.cob_authent_register_email);
+        passwordRegisterEditText = (MaterialEditText) findViewById(R.id.cob_authent_register_password);
+        passwordRepeatRegisterEditText = (MaterialEditText) findViewById(R.id.cob_authent_register_password_repeat);
+
+        passwordRegisterEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        passwordRepeatRegisterEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        passwordRepeatRegisterEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == KeyEvent.KEYCODE_ENTER) {
+                    attemptRegister();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        Button mUsernameSignInButton = (Button) findViewById(R.id.cob_authent_login_button);
+        mUsernameSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-    }
+        Button mRegisterButton = (Button) findViewById(R.id.cob_authent_register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attemptRegister();
+            }
+        });
 
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
+        Button toRegisterButton = (Button) findViewById(R.id.cob_authent_to_register_button);
+        toRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLoginFormView.setVisibility(View.GONE);
+                mRegisterFormView.setVisibility(View.VISIBLE);
+                mActiveView = mRegisterFormView;
+            }
+        });
 
+        Button toLoginButton = (Button) findViewById(R.id.cob_authent_to_login_button);
+        toLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRegisterFormView.setVisibility(View.GONE);
+                mLoginFormView.setVisibility(View.VISIBLE);
+                mActiveView = mLoginFormView;
+            }
+        });
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -121,34 +156,30 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
         }
 
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        usernameEditText.setError(null);
+        passwordEditText.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String username = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
 
         // Check for a valid password, if the user entered one.
-        /*if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            passwordEditText.setError(getString(R.string.error_invalid_password));
+            focusView = passwordEditText;
             cancel = true;
         }
 
         // Check for a valid email address.
-        /*if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+        if (TextUtils.isEmpty(username)) {
+            usernameEditText.setError(getString(R.string.error_field_required));
+            focusView = usernameEditText;
             cancel = true;
-        } /*else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }*/
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -158,18 +189,79 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(username, password, null);
             mAuthTask.execute((Void) null);
         }
     }
 
+    private void attemptRegister() {
+        if (mRegisterTask != null) {
+            return;
+        }
+
+        // Reset errors.
+        usernameRegisterEditText.setError(null);
+        emailRegisterEditText.setError(null);
+        passwordRegisterEditText.setError(null);
+        passwordRepeatRegisterEditText.setError(null);
+
+        // Store values at the time of the login attempt.
+        String username = usernameRegisterEditText.getText().toString();
+        String email = emailRegisterEditText.getText().toString();
+        String password = passwordRegisterEditText.getText().toString();
+        String password2 = passwordRepeatRegisterEditText.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            passwordRegisterEditText.setError(getString(R.string.error_invalid_password));
+            focusView = passwordRegisterEditText;
+            cancel = true;
+        }
+
+        if (!password.equals(password2)) {
+            passwordRepeatRegisterEditText.setError(getString(R.string.error_invalid_password));
+            focusView = passwordRepeatRegisterEditText;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            emailRegisterEditText.setError(getString(R.string.error_field_required));
+            focusView = emailRegisterEditText;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            emailRegisterEditText.setError(getString(R.string.error_invalid_email));
+            focusView = emailRegisterEditText;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(username)) {
+            usernameRegisterEditText.setError(getString(R.string.error_field_required));
+            focusView = usernameRegisterEditText;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            mRegisterTask = new UserRegisterTask(username, email, password);
+            mRegisterTask.execute((Void) null);
+        }
+    }
+
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -184,12 +276,12 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            mActiveView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mActiveView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mActiveView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -205,62 +297,8 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mActiveView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<String>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(CobAuthenticatorActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
     }
 
     /**
@@ -269,25 +307,23 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Authorization> {
 
-        private final String mEmail;
+        private final String mUsername;
         private final String mPassword;
+        private final User mUser;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String email, String password, User user) {
+            mUsername = email;
             mPassword = password;
+            mUser = user;
         }
 
         @Override
         protected Authorization doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
-                return UserManager.login(Config.COB_CLIENT_ID, Config.COB_CLIENT_SECRET, "password", mEmail, mPassword, null, null);
+                return UserManager.login(Config.COB_CLIENT_ID, Config.COB_CLIENT_SECRET, "password", mUsername, mPassword, null, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // TODO: register the new account here.
             return null;
         }
 
@@ -296,27 +332,84 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity imple
             mAuthTask = null;
             showProgress(false);
 
-            if (authorization != null) {
-                Account account = new Account(mEmail, Config.COB_USER_TYPE);
-                accountManager.addAccountExplicitly(account, mPassword, null);
+            if (authorization != null && authorization.getAccess_token() != null) {
+                Account account = new Account(mUsername, Config.COB_USER_TYPE);
+
+                Bundle userBundle = new Bundle();
+
+                try {
+                    if (mUser != null) {
+                        userBundle.putString("username", mUser.getUsername());
+                        userBundle.putString("email", mUser.getEmail());
+                        userBundle.putInt("id", mUser.getId());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    userBundle = null;
+                }
+
+                accountManager.addAccountExplicitly(account, mPassword, userBundle);
 
                 final Intent intent = new Intent();
-                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mEmail);
+                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, mUsername);
                 intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Config.COB_USER_TYPE);
-                intent.putExtra(AccountManager.KEY_AUTHTOKEN, Config.COB_USER_TYPE);
+                intent.putExtra(AccountManager.KEY_AUTHTOKEN, authorization.getAccess_token());
                 setAccountAuthenticatorResult(intent.getExtras());
                 setResult(RESULT_OK, intent);
 
                 finish();
+            } else if (authorization != null && authorization.getError().equals("invalid_grant")){
+                passwordEditText.setError(getString(R.string.error_incorrect_password));
+                passwordEditText.requestFocus();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                Toast.makeText(getApplicationContext(), "Internal Error", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    public class UserRegisterTask extends AsyncTask<Void, Void, User> {
+
+        private final String mEmail;
+        private final String mPassword;
+        private final String mUsername;
+
+        UserRegisterTask(String username, String email, String password) {
+            mUsername = username;
+            mEmail = email;
+            mPassword = password;
+        }
+
+        @Override
+        protected User doInBackground(Void... params) {
+            try {
+                return UserManager.register(Config.COB_CLIENT_REGISTER_ID, Config.COB_CLIENT_SECRET, mUsername, mEmail, mPassword);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final User user) {
+            mAuthTask = null;
+
+            if (user != null) {
+                new UserLoginTask(mUsername, mPassword, user).execute();
+            } else {
+                Toast.makeText(getApplicationContext(), "Registration Error", Toast.LENGTH_SHORT).show();
+                showProgress(false);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mRegisterTask = null;
             showProgress(false);
         }
     }
