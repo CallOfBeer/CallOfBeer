@@ -33,7 +33,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/create_event_name">
+        android:layout_below="@+id/create_event_name"
+        android:id="@+id/create_event_date">
 
         <Button
             android:id="@+id/dateButton"
@@ -55,6 +56,55 @@
             android:background="@color/A400"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginTop="150dp"
+        android:id="@+id/create_event_nb"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre de personnes max"/>
+        <NumberPicker
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/numpicker"/>
+        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/create_event_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/create_event_date">
+        <ToggleButton
+            android:id="@+id/create_event_visibility_TB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="Evénement privé"
+            android:textOn="Evénement public"
+            android:textColor="@android:color/white"
+            android:background="@drawable/custom_toggle_color"
+            />
+        </LinearLayout>
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_event_nb"
+        android:id="@+id/create_event_description"
+        android:hint="description"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="Event's description"
+        app:met_iconLeft="@drawable/common_ic_googleplayservices"/>
+
+    <Button
+        android:id="@+id/send_event_BT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Créer event"
+        android:layout_below="@+id/create_event_description"
+        android:textColor="@android:color/white"
+        android:background="@color/A400"/>
     <!--<com.zcw.togglebutton.ToggleButton
         android:layout_width="54dp"
         toggle:onColor="#f00"

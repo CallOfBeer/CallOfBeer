@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.dev.callofbeer.activities.CallOfBeerActivity;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
@@ -26,11 +29,21 @@ public class CreateEventFragment extends Fragment implements OnDateSetListener, 
     public static final String DATEPICKER_TAG = "datepicker";
     public static final String TIMEPICKER_TAG = "timepicker";
     public Button butDate, butTime;
+    NumberPicker np;
+    ToggleButton tb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.view_create_event, container, false);
+
+        np = new NumberPicker(getActivity());
+        np = (NumberPicker) view.findViewById(R.id.numpicker);
+        np.setMinValue(0);
+        np.setMaxValue(50);
+
+        tb = new ToggleButton(getActivity());
+        tb = (ToggleButton) view.findViewById(R.id.create_event_visibility_TB);
 
         final Calendar calendar = Calendar.getInstance();
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), true);
@@ -80,6 +93,6 @@ public class CreateEventFragment extends Fragment implements OnDateSetListener, 
 
     @Override
     public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
-        butTime.setText(hourOfDay + "H" + minute);
+        butTime.setText(hourOfDay + "H" + String.format("%02d", minute));
     }
 }
