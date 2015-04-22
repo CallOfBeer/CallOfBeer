@@ -3,8 +3,6 @@ package com.dev.callofbeer.activities;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,21 +10,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.dev.callofbeer.R;
 import com.dev.callofbeer.authentication.utils.Config;
 import com.dev.callofbeer.fragments.CobFloatingMenu;
-import com.dev.callofbeer.fragments.AuthenticationFragment;
 import com.dev.callofbeer.fragments.CreateEventFragment;
 import com.dev.callofbeer.fragments.MapFragment;
-import com.dev.callofbeer.models.authentication.Authentication;
-import com.dev.callofbeer.models.authentication.User;
-import com.dev.callofbeer.models.authentication.UserSave;
 import com.dev.callofbeer.authentication.utils.UserManager;
+import com.dev.callofbeer.fragments.UserFragment;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-
-import java.util.List;
 
 /**
  * Created by matth on 04/03/15.
@@ -102,20 +94,8 @@ public class CallOfBeerActivity extends FragmentActivity {
     }
 
     public void startLogin() {
-        try {
-            AccountManager accountManager = AccountManager.get(this);
-            Account[] accts = accountManager.getAccountsByType(Config.COB_USER_TYPE);
-            Account acct = accts[0];
-            AccountManagerFuture<Bundle> accountManagerFuture = accountManager.getAuthToken(acct, Config.COB_USER_TYPE, null, this, null, null);
-            Bundle authTokenBundle = accountManagerFuture.getResult();
-            String authToken = authTokenBundle.get(AccountManager.KEY_AUTHTOKEN).toString();
-            Log.i("AuthToken", authToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        /*AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance(true);
-        getFragmentManager().beginTransaction().replace(R.id.main_container, authenticationFragment).commit();
-        mSlidingLayout.expandPanel(0.7f);*/
+        getFragmentManager().beginTransaction().replace(R.id.main_container, new UserFragment()).commit();
+        mSlidingLayout.expandPanel(0.7f);
     }
 
     public void toogleProgressBar(boolean b) {

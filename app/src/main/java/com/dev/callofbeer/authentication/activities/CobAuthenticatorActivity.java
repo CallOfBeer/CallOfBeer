@@ -397,7 +397,7 @@ public class CobAuthenticatorActivity extends AccountAuthenticatorActivity {
 
         @Override
         protected void onPostExecute(final User user) {
-            mAuthTask = null;
+            mRegisterTask = null;
 
             if (user != null) {
                 new UserLoginTask(mUsername, mPassword, user).execute();
