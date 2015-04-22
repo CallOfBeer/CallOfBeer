@@ -35,7 +35,7 @@ public class CreateEventFragment extends Fragment implements OnDateSetListener, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.view_create_event, container, false);
+        final View view = inflater.inflate(R.layout.view_create_event, container, false);
 
         np = new NumberPicker(getActivity());
         np = (NumberPicker) view.findViewById(R.id.numpicker);
